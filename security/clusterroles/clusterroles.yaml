@@ -1,0 +1,29 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: knime-postgres-operator
+rules:
+# The postgres-operator requires node read access to check nodes for a readiness label.
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: knime-postgres-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: knime-postgres-operator
+subjects:
+  # Important: The name and namespace of this ServiceAccount
+  # is fixed and may not be changed here.
+- kind: ServiceAccount
+  name: knime-postgres-operator
+  namespace: knime
