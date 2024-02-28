@@ -1,0 +1,25 @@
+## Values file for ingress-nginx helm chart
+## Find all options and full documentation here: https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
+
+controller:
+  config:
+    proxy-body-size: 0
+    proxy-connect-timeout: 60
+    proxy-read-timeout: 1800
+    proxy-send-timeout: 1800
+    use-forwarded-headers: true
+  image:
+    digest: false
+  ingressClass: business-hub
+  ingressClassResource:
+    name: business-hub
+  service:
+    type: LoadBalancer
+    targetPorts:
+      http: http
+      https: http
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-buffering: "on"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+      nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
