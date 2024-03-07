@@ -52,14 +52,14 @@ The following will use `hub.example.com` as an example base address to highlight
 
 DNS entries will need to be created for the following endpoints:
 
-* hub.example.com - root URL also used for the Business Hub UI
-* apps.hub.example.com - used for exposing workflow-defined Data Apps
-* api.hub.example.com - exposed the Business Hub API
-* ws.hub.example.com - used for websocket communication between Browser/AP and Business Hub
+* `hub.example.com` - root URL also used for the Business Hub UI
+* `apps.hub.example.com` - used for exposing workflow-defined Data Apps
+* `api.hub.example.com` - exposed the Business Hub API
+* `ws.hub.example.com` - used for websocket communication between Browser/AP and Business Hub
   * Currently used for exposing KNIME AI service available in Business Hub Standard or Enterprise `1.8.0` and higher
   * Requires the Loadbalancer in front of the Ingress controller supports Layer-4/TCP/TLS (i.e. AWS Application Load Balancer or Network Load Balancer, etc.)
-* auth.hub.example.com - used for exposing the embedded Keycloak user store
-* storage.hub.example.com - used for exposing the embedded Minio object store where workflows and data files are located
+* `auth.hub.example.com` - used for exposing the embedded Keycloak user store
+* `storage.hub.example.com` - used for exposing the embedded Minio object store where workflows and data files are located
 
 Note that the above domain and subdomains can be either directly set to the relevant Loadbalancer for the Ingress controller, or can alternatively be set by adding the necessary annotations to the Ingress rules below if using an automated DNS provisioner like `External-DNS`.
 
