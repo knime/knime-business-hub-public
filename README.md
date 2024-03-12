@@ -6,7 +6,7 @@ An optional prerequisite is that the Istio Service Mesh be manually installed an
 
 The recommended version of Istio is `1.18.7`. Releases can be found [here](https://github.com/istio/istio/releases/tag/1.18.7), as well as detailed installation instructions [here](https://istio.io/latest/docs/setup/getting-started/#download).
 
-Additional information can be found for manually installing Istio under `networking/istio` above..
+Additional information can be found for manually installing Istio under `networking/istio` above.
 
 If installing Istio manually, then the option to include Istio in the KOTs Configuration Dialog (when configuring the Hub release) will need to be disabled. If the Configuration Dialog specified that Istio is enabled (the **default** value), then the KNIME Business Hub release process will attempt to install Istio and its related Custom Resource Definitions (CRDs).
 
