@@ -1,0 +1,133 @@
+---
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istio-operator
+spec:
+  components:
+    base:
+      enabled: true
+    cni:
+      enabled: true
+    egressGateways:
+      - name: istio-egressgateway
+        enabled: false
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          hpaSpec:
+            minReplicas: 2
+            maxReplicas: 5
+    pilot:
+      enabled: true
+      k8s:
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+  ## Root for docker image paths e.g. "docker.io/istio".
+  hub: "docker.io/istio"
+  ## Version tag for docker images e.g. "1.20.3".
+  tag: "1.18.7"
+  meshConfig:
+    defaultConfig:
+      proxyMetadata: {}
+    enablePrometheusMerge: true
+    extensionProviders:
+      - name: "auth-exchanger"
+        envoyExtAuthzHttp:
+          service: "auth-exchanger.hub.svc.cluster.local"
+          port: "9090"
+          includeRequestHeadersInCheck:
+            ["authorization", "user-agent", "x-forwarded-for", "cookie"]
+          headersToUpstreamOnAllow: ["authorization", "x-auth-exchanger"]
+          pathPrefix: "/check"
+          timeout: 5s
+  values:
+    gateways:
+      istio-egressgateway:
+        autoscaleEnabled: true
+        name: istio-egressgateway
+        type: ClusterIP
+      istio-ingressgateway:
+        autoscaleEnabled: true
+        name: istio-ingressgateway
+        type: LoadBalancer
+        podAnnotations:
+          {
+            proxy.istio.io/config: '{"gatewayTopology":{ "numTrustedProxies": 1}}',
+          }
+    global:
+      configValidation: true
+      defaultNodeSelector: {}
+      defaultPodDisruptionBudget:
+        enabled: true
+      defaultResources:
+        requests:
+          cpu: 10m
+      imagePullPolicy: ""
+      imagePullSecrets: []
+      istioNamespace: istio-system
+      istiod:
+        enableAnalysis: false
+      jwtPolicy: third-party-jwt
+      logAsJson: false
+      logging:
+        level: default:info
+      meshNetworks: {}
+      mountMtlsCerts: false
+      multiCluster:
+        clusterName: ""
+        enabled: false
+      network: ""
+      omitSidecarInjectorConfigMap: false
+      oneNamespace: false
+      operatorManageWebhooks: false
+      pilotCertProvider: istiod
+      priorityClassName: ""
+      proxy:
+        autoInject: enabled
+        clusterDomain: cluster.local
+        componentLogLevel: misc:error
+        enableCoreDump: false
+        excludeIPRanges: ""
+        excludeInboundPorts: ""
+        excludeOutboundPorts: ""
+        image: proxyv2
+        includeIPRanges: "*"
+        logLevel: warning
+        privileged: false
+        readinessFailureThreshold: 30
+        readinessInitialDelaySeconds: 1
+        readinessPeriodSeconds: 2
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        statusPort: 15020
+        tracer: zipkin
+    pilot:
+      image: pilot
+      nodeSelector: {}
+      podAnnotations: {}
+      podLabels: {}
+    telemetry:
+      enabled: true
+      v2:
+        enabled: true
+        prometheus:
+          enabled: true

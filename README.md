@@ -6,6 +6,8 @@ An optional prerequisite is that the Istio Service Mesh be manually installed an
 
 The recommended version of Istio is `1.18.7`. Releases can be found [here](https://github.com/istio/istio/releases/tag/1.18.7), as well as detailed installation instructions [here](https://istio.io/latest/docs/setup/getting-started/#download).
 
+Additional information can be found for manually installing Istio under `networking/istio` above..
+
 If installing Istio manually, then the option to include Istio in the KOTs Configuration Dialog (when configuring the Hub release) will need to be disabled. If the Configuration Dialog specified that Istio is enabled (the **default** value), then the KNIME Business Hub release process will attempt to install Istio and its related Custom Resource Definitions (CRDs).
 
 Additionally, the following steps also assume that namespaces, DNS entries and related TLS certificates are provisioned before proceeding with the install. 
@@ -15,7 +17,7 @@ Additionally, the following steps also assume that namespaces, DNS entries and r
 The following namespaces need to be initially created:
 
 * `kots` - namespace where the KOTS Admin UI is deployed to (This namespace is specified when running the KOTS install shell script to deploy KOTS as it will act as the deployment administration tool for the Business Hub release. This can alternatively be `default` or any other namespace the admin prefers to use.)
-* `istio-system` - the namespace where the Istio service mesh controller will run
+* `istio-system` - the namespace where the Istio service mesh controller will run. This namespace may already exist if Istio was deployed previously during the above steps. 
 * `knime` - namespace where Hub persistence layers run
 * `hub` - namespace where Hub microservices run
   * The `hub` namespace additionally needs the `istio-injection=enabled` label set for inclusion in the service mesh
@@ -73,6 +75,8 @@ If creating the cert explicitly, it's typically recommended to create a cert wit
 
 Ingress rules may need to be further updated depending on use of other tools to correctly set DNS, TLS, etc. 
 
+See "Deploy Ingress Resources in `networking/ingress-nginx` for more information.
+
 
 ## Install Business Hub
 
@@ -81,9 +85,10 @@ Once the following supplemental steps above have been completed, the admin shoul
 The high-level remaining steps include:
 
 * Logging into the KOTS Admin UI
-* Uploading the Replicated license which will fetch the latest release (`1.8.0` of Business Hub)
+* Uploading the Replicated license which will fetch the latest release (`1.8.x` of Business Hub)
 * Enter appropriate configuration parameters in the KOTS Config Dialog
   * Specifically, note that there is an option under the Networking section to use a "provided" Ingress controller. This will block Business Hub from attempting to deploy its own ingress-nginx.
-  * Also, be sure to click on "Enable TLS" as TLS will be configured in front of the Business Hub install (likely at the Ingress Controller level). 
+  * Ensure the option is checked for "Enable TLS" if TLS is configured either at the Ingress-Nginx layer or somewhere else in front of the cluster.
+  * If Istio was manually installed prior to the installation, then Business Hub will need to be configured to **not** deploy Istio. This can be done by clicking the "Show Advanced Istio Configuration" option under `Networking`, the de-selecting the "Enable Istio" option in the `Networking: Istio` section that follows in the Configuration Dialog.
 * Save the Config changes, allow the pre-flight checks to run, then click "Deploy"
 

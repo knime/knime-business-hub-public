@@ -5,14 +5,28 @@ metadata:
   namespace: knime
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
+    #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffering: 'on'
     nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    ## Set proxy body size and timeouts values based on expected workloads.
+    ## Example recommended values given here.
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
 spec:
   ingressClassName: business-hub
+  ## The tls block needs additional configuration if cert-manager or similar
+  ## is used to create and bind certificates in the cluster to specific ingress rules.
+  #tls:
+  #- hosts:
+  #    - storage.hub.example.com
+  #  secretName: <cert-secret-name>
   rules:
-    - host: storage.<baseurl>
+    - host: storage.hub.example.com
       http:
         paths:
           - path: /
@@ -29,25 +43,38 @@ metadata:
   name: business-hub-keycloak
   namespace: knime
   annotations:
-    ## Keycloak expects to be contacted via HTTPS
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    # Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
+    #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffering: 'on'
     nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    ## Set proxy body size and timeouts values based on expected workloads.
+    ## Example recommended values given here.
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
 spec:
   ingressClassName: business-hub
+  ## The tls block needs additional configuration if cert-manager or similar
+  ## is used to create and bind certificates in the cluster to specific ingress rules.
+  #tls:
+  #- hosts:
+  #    - auth.hub.example.com
+  #  secretName: <cert-secret-name>
   rules:
-    - host: auth.<baseurl>
+    - host: auth.hub.example.com
       http:
         paths:
           - path: /
             pathType: ImplementationSpecific
             backend:
               service:
-                name: keycloak
+                name: knime-keycloak-service
                 port:
-                  number: 8443
+                  number: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -56,14 +83,34 @@ metadata:
   namespace: istio-system
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    # Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
+    #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffering: 'on'
     nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    ## Set proxy body size and timeouts values based on expected workloads.
+    ## Example recommended values given here.
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
 spec:
   ingressClassName: business-hub
+  ## The tls block needs additional configuration if cert-manager or similar
+  ## is used to create and bind certificates in the cluster to specific ingress rules.
+  #tls:
+  #- hosts:
+  #    - hub.example.com
+  #  secretName: <cert-secret-name>
+  #- hosts:
+  #    - api.hub.example.com
+  #  secretName: <cert-secret-name>
+  #- hosts:
+  #    - ws.hub.example.com
+  #  secretName: <cert-secret-name>
   rules:
-    - host: <baseurl>
+    - host: hub.example.com
       http:
         paths:
           - path: /
@@ -73,7 +120,7 @@ spec:
                 name: istio-ingressgateway
                 port:
                   number: 443
-    - host: api.<baseurl>
+    - host: api.hub.example.com
       http:
         paths:
           - path: /
@@ -83,7 +130,7 @@ spec:
                 name: istio-ingressgateway
                 port:
                   number: 443
-    - host: ws.<baseurL>
+    - host: ws.hub.example.com
       http:
         paths:
           - path: /
@@ -101,14 +148,28 @@ metadata:
   namespace: hub
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
+    #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffering: 'on'
     nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    ## Set proxy body size and timeouts values based on expected workloads.
+    ## Example recommended values given here.
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
 spec:
   ingressClassName: business-hub
+  ## The tls block needs additional configuration if cert-manager or similar
+  ## is used to create and bind certificates in the cluster to specific ingress rules.
+  #tls:
+  #- hosts:
+  #    - apps.hub.example.com
+  #  secretName: <cert-secret-name>
   rules:
-    - host: apps.<baseurl>
+    - host: apps.hub.example.com
       http:
         paths:
           - path: /

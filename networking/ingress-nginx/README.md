@@ -47,6 +47,12 @@ In each Ingress resource you will also need to replace the `<baseurl>` placehold
 sed -i "s/<baseurl>/hub.example.com/g" ingress.yaml
 ```
 
+Similarly, a `sed` command can be used to replace the `ingressClassName` of each `Ingress` resource.
+
+```
+sed -i "s/<ingressclass>/business-hub/g" ingress.yaml
+```
+
 After modifying the resources deploy them to the cluster:
 
 ```

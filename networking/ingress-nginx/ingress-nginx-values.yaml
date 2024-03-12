@@ -14,12 +14,12 @@ controller:
   ingressClassResource:
     name: business-hub
   service:
-    type: LoadBalancer
+    ## Specifying type `NodePort`, along with the `nodePorts` section
+    ## can be used when deploying Ingress-Nginx to a local cluster for testing.
+    type: NodePort
+    nodePorts:
+      http: 80
+      https: 443
     targetPorts:
       http: http
       https: http
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-buffering: "on"
-      nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
-      nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
