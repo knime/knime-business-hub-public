@@ -1,8 +1,8 @@
 # KNIME Business Hub - Supplemental Installation Resources
 
-The following supplemental install instructions, as well as additional resources found in this repository, assume the install is performed with access to the internet on an existing Kubernetes cluster (version 1.25 to 1.28), that it has **volume provisioner** (CSI) installed, as well as an Ingress controller installed (i.e. ingress-nginx or similar). 
+The following supplemental install instructions, as well as additional resources found in this repository, assume the install is performed with access to the internet on an existing Kubernetes cluster (version 1.25 to 1.28), that it has **volume provisioner** (CSI) installed, as well as an Ingress controller installed (i.e. ingress-nginx or similar).
 
-An optional prerequisite is that the Istio Service Mesh be manually installed and configured in the target cluster if cluster security configuration and permissions disallow the creation of the mesh. 
+An optional prerequisite is that the Istio Service Mesh be manually installed and configured in the target cluster if cluster security configuration and permissions disallow the creation of the mesh.
 
 The recommended version of Istio is `1.18.7`. Releases can be found [here](https://github.com/istio/istio/releases/tag/1.18.7), as well as detailed installation instructions [here](https://istio.io/latest/docs/setup/getting-started/#download).
 
@@ -10,14 +10,14 @@ Additional information can be found for manually installing Istio under `network
 
 If installing Istio manually, then the option to include Istio in the KOTs Configuration Dialog (when configuring the Hub release) will need to be disabled. If the Configuration Dialog specified that Istio is enabled (the **default** value), then the KNIME Business Hub release process will attempt to install Istio and its related Custom Resource Definitions (CRDs).
 
-Additionally, the following steps also assume that namespaces, DNS entries and related TLS certificates are provisioned before proceeding with the install. 
+Additionally, the following steps also assume that namespaces, DNS entries and related TLS certificates are provisioned before proceeding with the install.
 
 ## Namespaces
 
 The following namespaces need to be initially created:
 
 * `kots` - namespace where the KOTS Admin UI is deployed to (This namespace is specified when running the KOTS install shell script to deploy KOTS as it will act as the deployment administration tool for the Business Hub release. This can alternatively be `default` or any other namespace the admin prefers to use.)
-* `istio-system` - the namespace where the Istio service mesh controller will run. This namespace may already exist if Istio was deployed previously during the above steps. 
+* `istio-system` - the namespace where the Istio service mesh controller will run. This namespace may already exist if Istio was deployed previously during the above steps.
 * `knime` - namespace where Hub persistence layers run
 * `hub` - namespace where Hub microservices run
   * The `hub` namespace additionally needs the `istio-injection=enabled` label set for inclusion in the service mesh
@@ -31,11 +31,11 @@ The KOTS admin UI can be installed by running the following from a host machine 
 curl https://kots.io/install | bash kubectl kots install knime-hub
 ```
 
-When prompted, specify the desire namespace (i.e. `kots`, `default`, etc.) where you prefer the KOTS stack to run. 
+When prompted, specify the desire namespace (i.e. `kots`, `default`, etc.) where you prefer the KOTS stack to run.
 
 Once installation completes, a port-forward tunnel will be automatically opened to allow the browser to connect to the KOTS UI on https://localhost:8800
 
-When installing KOTS into an existing Kubernetes cluster, a tunnel will need to be opened anytime the KOTS UI needs to be accessed for security reasons. 
+When installing KOTS into an existing Kubernetes cluster, a tunnel will need to be opened anytime the KOTS UI needs to be accessed for security reasons.
 
 The KOTS UI tunnel can be re-established by running:
 
@@ -49,8 +49,8 @@ Alternatively, you can directly establish the port-forward tunnel to kots via:
 
 ## DNS Entries and TLS Certificates
 
-KNIME Business Hub will be accessed via a **base URL**, with a number of subdomains also configured for more targeted purposes. 
-The following will use `hub.example.com` as an example base address to highlight how the base address and subdomains are to be configured. 
+KNIME Business Hub will be accessed via a **base URL**, with a number of subdomains also configured for more targeted purposes.
+The following will use `hub.example.com` as an example base address to highlight how the base address and subdomains are to be configured.
 
 DNS entries will need to be created for the following endpoints:
 
@@ -73,7 +73,7 @@ If creating the cert explicitly, it's typically recommended to create a cert wit
 
 `Ingress` rules will need to be manually created prior to install. A working template of the required `Ingresses` can be found under [/networking/ingress-nginx/ingress.yaml](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/ingress-nginx/ingress.yaml).
 
-Ingress rules may need to be further updated depending on use of other tools to correctly set DNS, TLS, etc. 
+Ingress rules may need to be further updated depending on use of other tools to correctly set DNS, TLS, etc.
 
 See "Deploy Ingress Resources in `networking/ingress-nginx` for more information.
 
@@ -92,3 +92,60 @@ The high-level remaining steps include:
   * If Istio was manually installed prior to the installation, then Business Hub will need to be configured to **not** deploy Istio. This can be done by clicking the "Show Advanced Istio Configuration" option under `Networking`, the de-selecting the "Enable Istio" option in the `Networking: Istio` section that follows in the Configuration Dialog.
 * Save the Config changes, allow the pre-flight checks to run, then click "Deploy"
 
+## Enable JSON Logging for Istio
+
+Istio is not configured for JSON logging by default. To enable it, the `IstioOperator` resource (`networking/istio/istio-config.yaml`) should be updated with the following:
+
+* `.spec.global.logAsJson`
+* `.spec.meshConfig.accessLogEncoding`
+* `.spec.meshConfig.accessLogFile`
+* `.spec.meshConfig.accessLogFormat`
+
+See below for an example of how to configure Istio for JSON logging. All other config in the `networking/istio/istio-config.yaml` file would remain the same and has been excluded from the example.
+
+```yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istio-operator
+spec:
+  global:
+    logAsJson: true
+  meshConfig:
+    accessLogEncoding: JSON
+    accessLogFile: /dev/stdout
+    accessLogFormat: |
+      {
+        "etag": "%RESP(etag?ETag)%",
+        "if_none_match": "%REQ(If-None-Match)%",
+        "knime_api_version": "%REQ(KNIME-API-Version)%",
+        "x_knime_client_type": "%REQ(X-KNIME-Client-Type)%",
+        "bytes_sent": "%BYTES_SENT%",
+        "upstream_cluster": "%UPSTREAM_CLUSTER%",
+        "downstream_remote_address": "%DOWNSTREAM_REMOTE_ADDRESS%",
+        "authority": "%REQ(:AUTHORITY)%",
+        "path": "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%",
+        "x_envoy_original_path": "%REQ(X-ENVOY-ORIGINAL-PATH)%",
+        "path_path": "%REQ(PATH)%",
+        "protocol": "%PROTOCOL%",
+        "upstream_service_time": "%REQ(x-envoy-upstream-service-time)%",
+        "upstream_local_address": "%UPSTREAM_LOCAL_ADDRESS%",
+        "duration": "%DURATION%",
+        "upstream_transport_failure_reason": "%UPSTREAM_TRANSPORT_FAILURE_REASON%",
+        "route_name": "%ROUTE_NAME%",
+        "downstream_local_address": "%DOWNSTREAM_LOCAL_ADDRESS%",
+        "user_agent": "%REQ(USER-AGENT)%",
+        "response_code": "%RESPONSE_CODE%",
+        "response_flags": "%RESPONSE_FLAGS%",
+        "start_time": "%START_TIME%",
+        "method": "%REQ(:METHOD)%",
+        "request_id": "%REQ(X-REQUEST-ID)%",
+        "upstream_host": "%UPSTREAM_HOST%",
+        "x_forwarded_for": "%REQ(X-FORWARDED-FOR)%",
+        "x_forwarded_port": "%REQ(X-FORWARDED-PORT)%",
+        "x_forwarded_proto": "%REQ(X-FORWARDED-PROTO)%",
+        "requested_server_name": "%REQUESTED_SERVER_NAME%",
+        "bytes_received": "%BYTES_RECEIVED%",
+        "istio_policy_status": "-"
+      }
+```
