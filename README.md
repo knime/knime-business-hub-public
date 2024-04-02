@@ -103,6 +103,8 @@ Istio is not configured for JSON logging by default. To enable it, the `IstioOpe
 
 See below for an example of how to configure Istio for JSON logging. All other config in the `networking/istio/istio-config.yaml` file would remain the same and has been excluded from the example.
 
+> See [Istio Docs: Envoy Access Logs](https://istio.io/latest/docs/tasks/observability/logs/access-log/) for more details on the access log format.
+
 ```yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
