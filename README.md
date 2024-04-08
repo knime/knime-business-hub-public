@@ -4,7 +4,7 @@ The following supplemental install instructions, as well as additional resources
 
 An optional prerequisite is that the Istio Service Mesh be manually installed and configured in the target cluster if cluster security configuration and permissions disallow the creation of the mesh.
 
-The recommended version of Istio is `1.18.7`. Releases can be found [here](https://github.com/istio/istio/releases/tag/1.18.7), as well as detailed installation instructions [here](https://istio.io/latest/docs/setup/getting-started/#download).
+The recommended version of Istio is `1.20.3`. Releases can be found [here](https://github.com/istio/istio/releases/tag/1.20.3), as well as detailed installation instructions [here](https://istio.io/latest/docs/setup/getting-started/#download).
 
 Additional information can be found for manually installing Istio under `networking/istio` above.
 
