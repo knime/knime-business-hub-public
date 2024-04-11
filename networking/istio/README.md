@@ -20,6 +20,11 @@ Install Istio:
 istioctl install -f istio-config.yaml --verify
 ```
 
+When installing on Openshift use the following command
+```sh
+istioctl install --set profile=openshift -f istio-config.yaml --verify
+```
+
 This will install and verify the Istio service mesh install into the `istio-system` namespace.
 
 ## Enable JSON Logging for Istio
