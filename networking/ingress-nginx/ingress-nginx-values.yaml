@@ -14,12 +14,9 @@ controller:
   ingressClassResource:
     name: business-hub
   service:
-    ## Specifying type `NodePort`, along with the `nodePorts` section
-    ## can be used when deploying Ingress-Nginx to a local cluster for testing.
+    ## Specifying type `NodePort` which can be used when
+    ## deploying Ingress-Nginx to a local cluster for testing.
     type: NodePort
-    nodePorts:
-      http: 80
-      https: 443
     targetPorts:
       http: http
       https: http
