@@ -4,7 +4,7 @@ If an environment is running in restricted RBAC mode, CRDs cannot be installed b
 
 CRDs can be installed with the following command:
 ```
-kubectl apply -R -f .
+kubectl create -R -f .
 ```
 
 The above command will recursively install all CRDs organised in subfolders in the crds/ directory.
