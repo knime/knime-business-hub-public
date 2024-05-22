@@ -20,12 +20,15 @@ kubectl kots install knime-hub --use-minimal-rbac
 
 The `--use-minimal-rbac` option of the `kots install` command will ensure that KOTS is installed with namespace-scoped Roles and RoleBindings.
 
-## 2.
+## 2. Preparing the cluster for installing knime-hub
 
 The majority of ClusterRoles and ClusterRoleBindigs have already been eliminated from the stack of Knime Business Hub, however there are still some services which rely on these cluster scoped permissions.
 
-Due to these dependencies, installation with minimal RBAC mode enabled can only succeed if the following prerequisites are fulfilled:
+Due to these dependencies, installation with minimal RBAC mode enabled can only succeed if the following prerequisites are <u>fulfilled</u>:
 
-1.  Customer installs ingress-nginx and creates necessary IngressRules. [Instruction and sample configuration.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/ingress-nginx/)
-2.  Customer installs istio. [Instructions and sample configuration.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/istio/)
-3.
+1.  [Customer installs CustomResoureDefinitions.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/crds/)
+2.  [Customer installs ingress-nginx and creates necessary IngressRules.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/ingress-nginx/)
+3.  [Customer installs istio.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/istio/)
+4.  [Customer applies necessary ClusterRoles and ClusterRoleBindings.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/security/clusterroles/)
+
+## 3. Installing knime-hub
