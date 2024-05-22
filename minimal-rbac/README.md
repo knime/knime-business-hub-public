@@ -40,6 +40,7 @@ When installing knime-hub into and enviroment that is running in namespace-scope
 2.  Set the Ingress Controller Configuration to the `Provided by the cluster` option. **Enable** the `Show Advanced Istio Configuration` and **disable** the `Enable Istio` option in the Networking: Istio section.
     ![networking](images/2_Networking.png)
 3.  In the Advanced: Kubernetes Cluster Management section **disable** `Enable Automatic Deployment and Updates for Custom Resource Definitions (CRDs)` and `Enable Cluster Role Provisioning` options.
+
     > Leave the `Add istio injection label to hub namespace` enabled or disable it if the condition applies.
 
     ![advanced-kubernetes-cluster-management](images/3_Advanced_Kubernetes_Cluster_Management.png)
