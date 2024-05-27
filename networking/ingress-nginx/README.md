@@ -7,6 +7,8 @@ KNIME Business Hub deploys and uses ingress-nginx for traffic ingress. However, 
 - `kubectl` matching the cluster version
 - latest `helm` version, if installing ingress-nginx using a helm chart https://helm.sh/docs/intro/quickstart/
 
+> **Note**: Some features in KNIME Business Hub, eg the Job Viewer, use websockets. If an external proxy or load balancer is used it needs to be websocket compatible. 
+
 ## Deploy ingress-nginx
 
 If an ingress-nginx controller is not already deployed in the cluster you'll need to deploy one first. We are using the [official ingress-nginx chart developed by the Kubernetes project](https://github.com/kubernetes/ingress-nginx).
