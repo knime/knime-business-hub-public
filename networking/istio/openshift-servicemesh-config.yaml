@@ -1,0 +1,123 @@
+---
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic
+  namespace: istio-system
+spec:
+  security:
+    manageNetworkPolicy: false
+    identity:
+      type: ThirdParty
+  tracing:
+    sampling: 10000
+    type: None
+  profiles:
+    - default
+  proxy:
+    accessLogging:
+      file:
+        name: /dev/stdout
+    injection:
+      autoInject: true
+    logging:
+      level: info
+    networking:
+      clusterDomain: cluster.local
+      trafficControl:
+        inbound:
+          excludedPorts: []
+        outbound:
+          excludedPorts: []
+    runtime:
+      container:
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+      readiness:
+        failureThreshold: 30
+        initialDelaySeconds: 1
+        periodSeconds: 2
+        statusPort: 15020
+  gateways:
+    ingress:
+      runtime:
+        container:
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128M
+        deployment:
+          autoScaling:
+            enabled: true
+            maxReplicas: 5
+            minReplicas: 2
+        pod:
+          metadata:
+            annotations:
+              proxy.istio.io/config: '{"gatewayTopology":{ "numTrustedProxies": 1}}'
+      service:
+        type: ClusterIP
+    openshiftRoute:
+      enabled: false
+  meshConfig:
+    extensionProviders:
+      - envoyExtAuthzHttp:
+          headersToUpstreamOnAllow:
+            - authorization
+            - x-auth-exchanger
+          includeRequestHeadersInCheck:
+            - authorization
+            - user-agent
+            - x-forwarded-for
+            - cookie
+          pathPrefix: /check
+          port: 9090
+          service: auth-exchanger.hub.svc.cluster.local
+          timeout: 5s
+        name: auth-exchanger
+  policy:
+    type: Istiod
+  addons:
+    grafana:
+      enabled: false
+    jaeger:
+      install:
+        storage:
+          type: None
+    kiali:
+      enabled: false
+    prometheus:
+      enabled: false
+  version: v2.5
+  runtime:
+    components:
+      pilot:
+        container:
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+        deployment:
+          replicas: 1
+  telemetry:
+    type: Istiod
+---
+kind: ServiceMeshMemberRoll
+apiVersion: maistra.io/v1
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  members:
+    - hub

@@ -20,12 +20,27 @@ Install Istio:
 istioctl install -f istio-config.yaml --verify
 ```
 
-When installing on Openshift use the following command
+This will install and verify the Istio service mesh install into the `istio-system` namespace.
+
+## Openshift
+
+Istio can be installed manually into an Openshift cluster or setup using the Openshift Service Mesh Operator.
+
+> See [Openshift Docs: Service Mesh](https://docs.openshift.com/container-platform/latest/service_mesh/v2x/ossm-about.html) for information on setting up the Service Mesh.
+
+When installing on Openshift manually use the following command.
+
 ```sh
 istioctl install --set profile=openshift -f istio-config.yaml --verify
 ```
 
-This will install and verify the Istio service mesh install into the `istio-system` namespace.
+When using the Openshift Service Mesh then use the following command. Note that this is the minimal configuration needed for KNIME Business Hub to work and can be modified as needed. If Hub is being
+installed into a shared cluster where Service Mesh is already being utilised then this config will need to be adapted to suit the cluster's setup (e.g. the proxy section of the ServiceMeshControlPlane
+resource may need to be converted into an Istio ProxyConfig custom resource.)
+
+```sh
+kubectl apply -f openshift-servicemesh-config.yaml
+```
 
 ## Enable JSON Logging for Istio
 
