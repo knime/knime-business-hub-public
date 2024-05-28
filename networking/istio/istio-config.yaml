@@ -41,8 +41,11 @@ spec:
   ## Version tag for docker images e.g. "1.20.3".
   tag: "1.20.3"
   meshConfig:
+    accessLogFile: /dev/stdout
     defaultConfig:
-      proxyMetadata: {}
+      proxyMetadata:
+        ISTIO_META_DNS_CAPTURE: "true"
+        ISTIO_META_DNS_AUTO_ALLOCATE: "true"
     enablePrometheusMerge: true
     extensionProviders:
       - name: "auth-exchanger"
