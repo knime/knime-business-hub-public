@@ -1,6 +1,6 @@
 # ingress-nginx
 
-KNIME Business Hub deploys and uses ingress-nginx for traffic ingress. However, the options exposed in the KOTS admin console are not enough to cover most existing cluster scenarios, and in some clusters there's an ingress-nginx controller already deployed that should be reused. In those cases KNIME Business Hub can be configured to not deploy ingress-nginx, and instead rely on the cluster operator to deploy necessary resources.
+KNIME Business Hub deploys and uses ingress-nginx for traffic ingress. However, the options exposed in the KOTS admin console are not enough to cover most existing cluster scenarios, and in some clusters there's an ingress controller already deployed that should be reused. In those cases KNIME Business Hub can be configured to not deploy ingress-nginx, and instead rely on the cluster operator to deploy necessary resources.
 
 ## Prerequesites
 
@@ -8,6 +8,8 @@ KNIME Business Hub deploys and uses ingress-nginx for traffic ingress. However, 
 - latest `helm` version, if installing ingress-nginx using a helm chart https://helm.sh/docs/intro/quickstart/
 
 > **Note**: Some features in KNIME Business Hub, eg the Job Viewer, use websockets. If an external proxy or load balancer is used it needs to be websocket compatible. 
+
+> **Note**: If you want to generate Routes for Openshift refer to the Openshift section below.
 
 ## Deploy ingress-nginx
 
@@ -49,7 +51,7 @@ In each Ingress resource you will also need to replace the `<baseurl>` placehold
 sed -i "s/<baseurl>/hub.example.com/g" ingress.yaml
 ```
 
-Similarly, a `sed` command can be used to replace the `ingressClassName` of each `Ingress` resource.
+Similarly, if you are using an ingress controller other than the one recommended here then a `sed` command can be used to replace the `ingressClassName` of each `Ingress` resource.
 
 ```
 sed -i "s/<ingressclass>/business-hub/g" ingress.yaml
@@ -63,6 +65,27 @@ kubectl apply -f ingress.yaml
 
 ## Configure KNIME Business Hub
 
-To configure KNIME Business Hub to use a cluster-provided ingress-nginx controller: in the KOTS admin console go to the Config tab and first enable the "View Advanced Settings" option that you can find in the Global section at the top. Afterwards go to the Networking section and for "Ingress Controller Configuration" select "Provided by the cluster". Select the "Enable TLS" option if KNIME Business Hub will be secured with TLS, either by the ingress-nginx controller or a loadbalancer.
+To configure KNIME Business Hub to use a cluster-provided ingress controller: in the KOTS admin console go to the Config tab and first enable the "View Advanced Settings" option that you can find in the Global section at the top. Afterwards go to the Networking section and for "Ingress Controller Configuration" select "Provided by the cluster". Select the "Enable TLS" option if KNIME Business Hub will be secured with TLS, either by the ingress-nginx controller or a loadbalancer.
 
 ![kots-networking-configuration](images/kots-networking-configuration.png)
+
+## Openshift
+
+If you are deploying into an Openshift cluster you can use the default HAProxy ingress controller instead of ingress-nginx . Openshift will generate Route resources automatically as long as the `ingressClassName` of each `Ingress` resource is changed to that of the controller. By default this will be `openshift-default`. If you want these Routes to terminate TLS then this can be done here as well, uncomment the TLS block in each Ingress rule as fill in as needed.
+
+> See [Openshift Docs: Route Creation From Ingress](https://docs.openshift.com/container-platform/latest/networking/routes/route-configuration.html#nw-ingress-creating-a-route-via-an-ingress_route-configuration)
+ for more details on configuration options.
+
+> See [Openshift Docs: Create Route With Default Certificate](https://docs.openshift.com/container-platform/latest/networking/routes/route-configuration.html#creating-edge-route-with-default-certificate_route-configuration)
+ for more details on managing certificate credentials inside a Route.
+
+ Please note that we set the following values in our nginx controller that may need to be configured on the Openshift router if you experience any issues.
+
+- proxy-buffer-size: 64k
+- proxy-buffering: 'on'
+- proxy-buffers-number: '4'
+- proxy-body-size: 0
+- proxy-connect-timeout: 60
+- proxy-read-timeout: 1800
+- proxy-send-timeout: 1800
+- use-forwarded-headers: true
