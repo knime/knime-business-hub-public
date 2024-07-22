@@ -19,15 +19,15 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
     haproxy.router.openshift.io/timeout: '1800'
 spec:
-  ingressClassName: business-hub
+  ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
   #tls:
   #- hosts:
-  #    - storage.hub.example.com
+  #    - storage.<baseurl>
   #  secretName: <cert-secret-name>
   rules:
-    - host: storage.hub.example.com
+    - host: storage.<baseurl>
       http:
         paths:
           - path: /
@@ -62,15 +62,15 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
     haproxy.router.openshift.io/timeout: '1800'
 spec:
-  ingressClassName: business-hub
+  ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
   #tls:
   #- hosts:
-  #    - auth.hub.example.com
+  #    - auth.<baseurl>
   #  secretName: <cert-secret-name>
   rules:
-    - host: auth.hub.example.com
+    - host: auth.<baseurl>
       http:
         paths:
           - path: /
@@ -102,21 +102,21 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
     haproxy.router.openshift.io/timeout: '1800'
 spec:
-  ingressClassName: business-hub
+  ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
   #tls:
   #- hosts:
-  #    - hub.example.com
+  #    - <baseurl>
   #  secretName: <cert-secret-name>
   #- hosts:
-  #    - api.hub.example.com
+  #    - api.<baseurl>
   #  secretName: <cert-secret-name>
   #- hosts:
-  #    - ws.hub.example.com
+  #    - ws.<baseurl>
   #  secretName: <cert-secret-name>
   rules:
-    - host: hub.example.com
+    - host: <baseurl>
       http:
         paths:
           - path: /
@@ -126,7 +126,7 @@ spec:
                 name: istio-ingressgateway
                 port:
                   number: 443
-    - host: api.hub.example.com
+    - host: api.<baseurl>
       http:
         paths:
           - path: /
@@ -136,7 +136,7 @@ spec:
                 name: istio-ingressgateway
                 port:
                   number: 443
-    - host: apps.hub.example.com
+    - host: apps.<baseurl>
       http:
         paths:
           - path: /
@@ -146,7 +146,7 @@ spec:
                 name: istio-ingressgateway
                 port:
                   number: 443
-    - host: ws.hub.example.com
+    - host: ws.<baseurl>
       http:
         paths:
           - path: /
