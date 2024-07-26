@@ -1,0 +1,41 @@
+configuration:
+  backupStorageLocation:
+  - name: default
+    bucket: < snapshot bucket name >
+    config:
+      region: < aws region >
+    prefix: < folder name velero will create to store backups >
+    provider: aws
+  volumeSnapshotLocation:
+  - name: default
+    config:
+      region: < aws region >
+    provider: aws
+
+
+credentials:
+  useSecret: true
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id=
+      aws_secret_access_key=
+
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.7.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+
+deployNodeAgent: true
+
+
+# https://github.com/vmware-tanzu/velero/issues/7462
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: 1.26.14-debian-11-r6

@@ -1,0 +1,45 @@
+configuration:
+  backupStorageLocation:
+  - name: default
+    bucket: < snapshot bucket name >
+    config:
+      resourceGroup: < resource group name of snapshot storage account >
+      storageAccount: < snapshot storage account name >
+    prefix: < folder name velero will create to store backups >
+    provider: azure
+  volumeSnapshotLocation:
+  - name: default
+    config:
+      resourceGroup: < resource group name of snapshot storage account >
+      subscriptionId: < subscription id >
+    provider: azure
+
+
+credentials:
+  useSecret: true
+  secretContents:
+    cloud: |
+      AZURE_SUBSCRIPTION_ID=
+      AZURE_TENANT_ID=
+      AZURE_CLIENT_ID=
+      AZURE_CLIENT_SECRET=
+      AZURE_RESOURCE_GROUP=
+
+
+initContainers:
+  - name: velero-plugin-for-azure
+    image: velero/velero-plugin-for-microsoft-azure:v1.7.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+
+deployNodeAgent: true
+
+
+# https://github.com/vmware-tanzu/velero/issues/7462
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: 1.26.14-debian-11-r6
