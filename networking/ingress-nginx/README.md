@@ -45,6 +45,12 @@ helm upgrade -i -n knime business-hub-ingress-nginx ingress-nginx/ingress-nginx 
 
 In [ingress.yaml](ingress.yaml) you'll find Ingress resources needed for KNIME Business Hub that can be further configured to fit your desired ingress strategy.
 
+You will need to replace the `<business-hub-namespace>` placeholder with the namespace KNIME Business Hub is installed in, for example using `sed`:
+
+```
+sed -i "s/<business-hub-namespace>/knime-business-hub/g" ingress.yaml
+```
+
 In each Ingress resource you will also need to replace the `<baseurl>` placeholder with the Webapp URL configured in the KOTS admin console, for example using `sed`:
 
 ```
@@ -57,7 +63,7 @@ Similarly, if you are using an ingress controller other than the one recommended
 sed -i "s/<ingressclass>/business-hub/g" ingress.yaml
 ```
 
-After modifying the resources deploy them to the cluster:
+After modifying the resources, deploy them to the cluster:
 
 ```
 kubectl apply -f ingress.yaml
@@ -71,7 +77,7 @@ To configure KNIME Business Hub to use a cluster-provided ingress controller: in
 
 ## Openshift
 
-If you are deploying into an Openshift cluster you can use the default HAProxy ingress controller instead of ingress-nginx . Openshift will generate Route resources automatically as long as the `ingressClassName` of each `Ingress` resource is changed to that of the controller. By default this will be `openshift-default`. If you want these Routes to terminate TLS then this can be done here as well, uncomment the TLS block in each Ingress rule as fill in as needed.
+If you are deploying into an Openshift cluster you can use the default HAProxy ingress controller instead of ingress-nginx. Openshift will generate Route resources automatically as long as the `ingressClassName` of each `Ingress` resource is changed to that of the controller. By default this will be `openshift-default`. If you want these Routes to terminate TLS then this can be done here as well, uncomment the TLS block in each Ingress rule and fill in as needed.
 
 > See [Openshift Docs: Route Creation From Ingress](https://docs.openshift.com/container-platform/latest/networking/routes/route-configuration.html#nw-ingress-creating-a-route-via-an-ingress_route-configuration)
  for more details on configuration options.

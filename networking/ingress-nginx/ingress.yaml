@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: business-hub-minio
-  namespace: knime
+  namespace: <business-hub-namespace>
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     ## Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
@@ -22,10 +22,10 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  #tls:
-  #- hosts:
+  # tls:
+  # - hosts:
   #    - storage.<baseurl>
-  #  secretName: <cert-secret-name>
+  #   secretName: <cert-secret-name>
   rules:
     - host: storage.<baseurl>
       http:
@@ -42,7 +42,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: business-hub-keycloak
-  namespace: knime
+  namespace: <business-hub-namespace>
   annotations:
     ## redirect to /auth/ if / is called
     ## ending slash is important, see https://github.com/aerogear/keycloak-metrics-spi/issues/190
@@ -65,10 +65,10 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  #tls:
-  #- hosts:
+  # tls:
+  # - hosts:
   #    - auth.<baseurl>
-  #  secretName: <cert-secret-name>
+  #   secretName: <cert-secret-name>
   rules:
     - host: auth.<baseurl>
       http:
@@ -105,16 +105,19 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  #tls:
-  #- hosts:
+  # tls:
+  # - hosts:
   #    - <baseurl>
-  #  secretName: <cert-secret-name>
-  #- hosts:
+  #   secretName: <cert-secret-name>
+  # - hosts:
   #    - api.<baseurl>
-  #  secretName: <cert-secret-name>
-  #- hosts:
+  #   secretName: <cert-secret-name>
+  # - hosts:
+  #    - apps.<baseurl>
+  #   secretName: <cert-secret-name>
+  # - hosts:
   #    - ws.<baseurl>
-  #  secretName: <cert-secret-name>
+  #   secretName: <cert-secret-name>
   rules:
     - host: <baseurl>
       http:
