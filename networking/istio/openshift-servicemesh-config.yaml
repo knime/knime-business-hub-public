@@ -43,6 +43,9 @@ spec:
         statusPort: 15020
   gateways:
     ingress:
+      # Optional namespace where the istio-ingressgateway service should live.
+      # Needs to be in line with 'business-hub-hub' ingress in the ingress section.
+      # namespace: <business-hub-namespace>
       runtime:
         container:
           resources:
@@ -78,7 +81,8 @@ spec:
             - cookie
           pathPrefix: /check
           port: 9090
-          service: auth-exchanger.hub.svc.cluster.local
+          ## Replace placeholder with installation namespace
+          service: auth-exchanger.<business-hub-namespace>.svc.cluster.local
           timeout: 5s
         name: auth-exchanger
   policy:
@@ -118,4 +122,4 @@ metadata:
   namespace: istio-system
 spec:
   members:
-    - hub
+    - <business-hub-namespace>
