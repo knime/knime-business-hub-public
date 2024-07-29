@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    haproxy.router.openshift.io/timeout: '1800s'
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
@@ -60,7 +60,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    haproxy.router.openshift.io/timeout: '1800s'
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
@@ -100,7 +100,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    haproxy.router.openshift.io/timeout: '1800s'
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
