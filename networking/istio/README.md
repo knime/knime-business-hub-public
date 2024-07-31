@@ -34,9 +34,18 @@ When installing on Openshift manually use the following command.
 istioctl install --set profile=openshift -f istio-config.yaml --verify
 ```
 
-When using the Openshift Service Mesh then use the following command. Note that this is the minimal configuration needed for KNIME Business Hub to work and can be modified as needed. If Hub is being
-installed into a shared cluster where Service Mesh is already being utilised then this config will need to be adapted to suit the cluster's setup (e.g. the proxy section of the ServiceMeshControlPlane
+When using the Openshift Service Mesh then use the following commands. Note that this is the minimal configuration needed for KNIME Business Hub to work and can be modified as needed. If Hub is being
+installed into a shared cluster where Service Mesh is already being utilized then this config will need to be adapted to suit the cluster's setup (e.g. the proxy section of the ServiceMeshControlPlane
 resource may need to be converted into an Istio ProxyConfig custom resource.)
+
+You will need to replace the `<business-hub-namespace>` placeholder with the namespace KNIME Business Hub is installed in, for example using `sed`:
+
+```sh
+sed -i "s/<business-hub-namespace>/knime-business-hub/g" ingress.yaml
+```
+
+After modifying the resources, deploy them to the cluster:
+
 
 ```sh
 kubectl apply -f openshift-servicemesh-config.yaml

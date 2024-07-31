@@ -85,7 +85,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: business-hub-hub
-  namespace: <namespace-of-istio-ingressgateway>
+  namespace: istio-system
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     # Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
