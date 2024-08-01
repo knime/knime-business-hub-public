@@ -22,10 +22,10 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  # tls:
-  # - hosts:
-  #    - storage.<baseurl>
-  #   secretName: <cert-secret-name>
+  tls:
+  - hosts:
+     - storage.<baseurl>
+    secretName: <cert-secret-name>
   rules:
     - host: storage.<baseurl>
       http:
@@ -65,10 +65,10 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  # tls:
-  # - hosts:
-  #    - auth.<baseurl>
-  #   secretName: <cert-secret-name>
+  tls:
+  - hosts:
+     - auth.<baseurl>
+    secretName: <cert-secret-name>
   rules:
     - host: auth.<baseurl>
       http:
@@ -105,19 +105,19 @@ spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
   ## is used to create and bind certificates in the cluster to specific ingress rules.
-  # tls:
-  # - hosts:
-  #    - <baseurl>
-  #   secretName: <cert-secret-name>
-  # - hosts:
-  #    - api.<baseurl>
-  #   secretName: <cert-secret-name>
-  # - hosts:
-  #    - apps.<baseurl>
-  #   secretName: <cert-secret-name>
-  # - hosts:
-  #    - ws.<baseurl>
-  #   secretName: <cert-secret-name>
+  tls:
+  - hosts:
+     - <baseurl>
+    secretName: <cert-secret-name>
+  - hosts:
+     - api.<baseurl>
+    secretName: <cert-secret-name>
+  - hosts:
+     - apps.<baseurl>
+    secretName: <cert-secret-name>
+  - hosts:
+     - ws.<baseurl>
+    secretName: <cert-secret-name>
   rules:
     - host: <baseurl>
       http:

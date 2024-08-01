@@ -58,10 +58,18 @@ In each Ingress resource you will also need to replace the `<baseurl>` placehold
 sed -i "s/<baseurl>/hub.example.com/g" ingress.yaml
 ```
 
-Similarly, if you are using an ingress controller other than the one recommended here then a `sed` command can be used to replace the `ingressClassName` of each `Ingress` resource.
+If you are using an ingress controller other than the one recommended here, replace the `ingressClassName` of each `Ingress` resource, for example using `sed`:
 
 ```
 sed -i "s/<ingressclass>/business-hub/g" ingress.yaml
+```
+
+To use TLS, make sure the TLS certificate `Secret` exists and replace the certificate placeholder, for example using `sed`:
+
+```
+oc --namespace <business-hub-namespace> create secret tls knime-business-hub-cert-bundle-secret --cert=hub-fullchain.pem --key=hub-privatekey.pem
+oc --namespace <istio-system-namespace> create secret tls knime-business-hub-cert-bundle-secret --cert=hub-fullchain.pem --key=hub-privatekey.pem
+sed -i "s/<cert-secret-name>/knime-business-hub-cert-bundle-secret/g" ingress.yaml
 ```
 
 After modifying the resources, deploy them to the cluster:
@@ -78,7 +86,7 @@ To configure KNIME Business Hub to use a cluster-provided ingress controller: in
 
 ## Openshift
 
-If you are deploying into an Openshift cluster you can use the default HAProxy ingress controller instead of ingress-nginx. Openshift will generate Route resources automatically as long as the `ingressClassName` of each `Ingress` resource is changed to that of the controller. By default this will be `openshift-default`. If you want these Routes to terminate TLS then this can be done here as well, uncomment the TLS block in each Ingress rule and fill in as needed.
+If you are deploying into an Openshift cluster you can use the default HAProxy ingress controller instead of ingress-nginx. Openshift will generate Route resources automatically as long as the `ingressClassName` of each `Ingress` resource is changed to that of the controller. By default this will be `openshift-default`. If you do not want these Routes to terminate TLS, comment out the TLS block in each Ingress rule.
 
 > See [Openshift Docs: Route Creation From Ingress](https://docs.openshift.com/container-platform/latest/networking/routes/route-configuration.html#nw-ingress-creating-a-route-via-an-ingress_route-configuration)
  for more details on configuration options.
