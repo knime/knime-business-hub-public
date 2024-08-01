@@ -45,10 +45,11 @@ helm upgrade -i -n knime business-hub-ingress-nginx ingress-nginx/ingress-nginx 
 
 In [ingress.yaml](ingress.yaml) you'll find Ingress resources needed for KNIME Business Hub that can be further configured to fit your desired ingress strategy.
 
-You will need to replace the `<business-hub-namespace>` placeholder with the namespace KNIME Business Hub is installed in, for example using `sed`:
+You will need to replace the `<business-hub-namespace>` and `<istio-system-namespace>` placeholders with the namespace KNIME Business Hub and Istio is installed in, for example using `sed`:
 
 ```
 sed -i "s/<business-hub-namespace>/knime-business-hub/g" ingress.yaml
+sed -i "s/<istio-system-namespace>/knime-business-hub-istio/g" ingress.yaml
 ```
 
 In each Ingress resource you will also need to replace the `<baseurl>` placeholder with the Webapp URL configured in the KOTS admin console, for example using `sed`:

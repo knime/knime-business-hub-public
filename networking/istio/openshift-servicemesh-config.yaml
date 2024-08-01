@@ -3,7 +3,7 @@ apiVersion: maistra.io/v2
 kind: ServiceMeshControlPlane
 metadata:
   name: basic
-  namespace: istio-system
+  namespace: <istio-system-namespace>
 spec:
   security:
     manageNetworkPolicy: false
@@ -119,7 +119,7 @@ kind: ServiceMeshMemberRoll
 apiVersion: maistra.io/v1
 metadata:
   name: default
-  namespace: istio-system
+  namespace: <istio-system-namespace>
 spec:
   members:
     - <business-hub-namespace>
