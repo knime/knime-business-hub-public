@@ -57,3 +57,6 @@ subjects:
   - kind: ServiceAccount
     name: license-checker
     namespace: hub
+  - kind: ServiceAccount
+    name: secret-store
+    namespace: hub
