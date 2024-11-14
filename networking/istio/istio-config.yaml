@@ -116,13 +116,21 @@ spec:
         readinessPeriodSeconds: 2
         resources:
           limits:
-            cpu: 2000m
+            cpu: 1000m
             memory: 1024Mi
           requests:
             cpu: 50m
-            memory: 128Mi
+            memory: 64Mi
         statusPort: 15020
         tracer: zipkin
+    istiod:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1024Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
     pilot:
       image: pilot
       nodeSelector: {}
