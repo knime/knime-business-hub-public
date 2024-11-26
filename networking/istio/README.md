@@ -22,6 +22,8 @@ istioctl install -f istio-config.yaml --verify
 
 This will install and verify the Istio service mesh install into the `istio-system` namespace.
 
+Additionally, some EnvoyFilters can be found in `networking/istio/envoyfilter/` which are recommended to be deployed after installing istio, to enable http compression in istio or more user friendly error messages. You may need to update the namespace for each EnvoyFilter before deploying.
+
 ## Openshift
 
 Istio can be installed manually into an Openshift cluster or setup using the Openshift Service Mesh Operator.

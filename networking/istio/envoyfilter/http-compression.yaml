@@ -1,0 +1,104 @@
+## This EnvoyFilter configures two http compressors for envoy: gzip and brotli. It is only applied on the istio-ingressgateway for external requests.
+## brotli has the priority over gzip with the choose_first=true configuration being set.
+
+## Docs: https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/compressor_filter
+## brotli compressor: https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/compression/brotli/compressor/v3/brotli.proto
+## gzip compressor: https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/compression/gzip/compressor/v3/gzip.proto
+
+## You can find the listener configuration that this gets applied to by running the following command, and looking for envoy.filters.http.compressor
+## istioctl pc listener <istio-ingressgateway pod id> -n istio-system -o yaml > listener.yaml
+
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: http-compression
+  namespace: istio-system
+spec:
+  ## Apply this filter only on the istio-ingressgateway. Internal mesh communication is not compressed.
+  workloadSelector:
+    labels:
+      app: istio-ingressgateway
+  configPatches:
+    ## gzip compressor.
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.compressor
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.compressor.v3.Compressor
+            content_type:
+            ## default content types used by envoy
+            - "application/javascript"
+            - "application/json"
+            - "application/xhtml+xml"
+            - "image/svg+xml"
+            - "text/css"
+            - "text/html"
+            - "text/plain"
+            - "text/xml"
+            ## additional content types returned by some KNIME Business Hub services
+            - "text/javascript"
+            - "text/javascript;charset=utf-8"
+            - "text/css;charset=utf-8"
+            - "text/html;charset=utf-8"
+            - "application/xml;charset=utf-8"
+            - "application/manifest+json"
+            - "application/vnd.mason+json"
+            compressor_library:
+              name: text_optimized
+              typed_config:
+                '@type': type.googleapis.com/envoy.extensions.compression.gzip.compressor.v3.Gzip
+            ## Do not remove the accept-encoding header here; otherwise we might not be able to fall back onto the second compressor.
+            ## The second compressor will remove the header.
+            # remove_accept_encoding_header: true
+    ## brotli compressor.
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.compressor
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.compressor.v3.Compressor
+            content_type:
+            ## default content types used by envoy
+            - "application/javascript"
+            - "application/json"
+            - "application/xhtml+xml"
+            - "image/svg+xml"
+            - "text/css"
+            - "text/html"
+            - "text/plain"
+            - "text/xml"
+            ## additional content types returned by some KNIME Business Hub services
+            - "text/javascript"
+            - "text/javascript;charset=utf-8"
+            - "text/css;charset=utf-8"
+            - "text/html;charset=utf-8"
+            - "application/xml;charset=utf-8"
+            - "application/manifest+json"
+            - "application/vnd.mason+json"
+            compressor_library:
+              name: text_optimized
+              typed_config:
+                '@type': type.googleapis.com/envoy.extensions.compression.brotli.compressor.v3.Brotli
+            ## Remove the accept-encoding header so that the service doesnt attempt to encode the response.
+            remove_accept_encoding_header: true
+            ## Prefer brotli over gzip.
+            choose_first: true
