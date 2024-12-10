@@ -9,15 +9,15 @@ metadata:
     #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
     ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
-    nginx.ingress.kubernetes.io/proxy-buffering: 'on'
-    nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
     ## Set proxy body size and timeouts values based on expected workloads.
     ## Example recommended values given here.
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    haproxy.router.openshift.io/timeout: "1800"
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
@@ -52,15 +52,15 @@ metadata:
     #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
     ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
-    nginx.ingress.kubernetes.io/proxy-buffering: 'on'
-    nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
     ## Set proxy body size and timeouts values based on expected workloads.
     ## Example recommended values given here.
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    haproxy.router.openshift.io/timeout: "1800"
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar
@@ -85,22 +85,22 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: business-hub-hub
-  namespace: istio-system
+  namespace: knime
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     # Set force ssl redirect to true only if TLS is enabled at, or in front of, Nginx.
     #nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
     ## Set proxy buffering values as needed. Recommended default values given here.
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
-    nginx.ingress.kubernetes.io/proxy-buffering: 'on'
-    nginx.ingress.kubernetes.io/proxy-buffers-number: '4'
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
     ## Set proxy body size and timeouts values based on expected workloads.
     ## Example recommended values given here.
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
-    haproxy.router.openshift.io/timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
+    haproxy.router.openshift.io/timeout: "1800"
 spec:
   ingressClassName: <ingressclass>
   ## The tls block needs additional configuration if cert-manager or similar

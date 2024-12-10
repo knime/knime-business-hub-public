@@ -1,0 +1,10 @@
+## For communicating with istio if the ingress gateway is not in the same namespace.
+## Update the externalName URL to match the service name and namespace.
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-ingressgateway
+  namespace: knime
+spec:
+  type: ExternalName
+  externalName: istio-ingressgateway.istio-system.svc.cluster.local
