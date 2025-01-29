@@ -56,7 +56,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: license-checker
-    namespace: hub
+    namespace: knime
   - kind: ServiceAccount
     name: secret-store
-    namespace: hub
+    namespace: knime
