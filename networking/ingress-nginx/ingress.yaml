@@ -37,6 +37,14 @@ spec:
                 name: minio
                 port:
                   number: 9000
+          # Blocks access to the defunct crossdomain.xml file
+          - path: /crossdomain.xml
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: fakebackend
+                port:
+                  number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
