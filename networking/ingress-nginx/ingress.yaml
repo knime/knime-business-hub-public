@@ -11,6 +11,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
     nginx.ingress.kubernetes.io/proxy-buffering: "on"
     nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Security-Policy: script-src 'none'";
     ## Set proxy body size and timeouts values based on expected workloads.
     ## Example recommended values given here.
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
