@@ -33,13 +33,13 @@ helm upgrade -i -n <namespace> <release name> ingress-nginx/ingress-nginx --vers
 Example:
 
 ```
-helm upgrade -i -n knime business-hub-ingress-nginx ingress-nginx/ingress-nginx --version 4.9.0 -f ingress-nginx-values.yaml
+helm upgrade -i -n knime business-hub-ingress-nginx ingress-nginx/ingress-nginx --version 4.11.5 -f ingress-nginx-values.yaml
 ```
 
 **Please note**:
 
 - If deploying in the `knime` namespace do not use `ingress-nginx` as the release name, as KOTS will think it needs to manage this release, and will ultimately delete it
-- KNIME Business Hub has been tested with ingress-nginx chart version 4.9.0
+- KNIME Business Hub has been tested with ingress-nginx chart version 4.11.5
 
 ## Deploy Ingress resources
 
