@@ -7,7 +7,7 @@ KNIME Business Hub deploys and uses ingress-nginx for traffic ingress. However, 
 - `kubectl` matching the cluster version
 - latest `helm` version, if installing ingress-nginx using a helm chart https://helm.sh/docs/intro/quickstart/
 
-> **Note**: Some features in KNIME Business Hub, eg the Job Viewer, use websockets. If an external proxy or load balancer is used it needs to be websocket compatible. 
+> **Note**: Some features in KNIME Business Hub, eg the Job Viewer, use websockets. If an external proxy or load balancer is used it needs to be websocket compatible.
 
 > **Note**: If you want to generate Routes for Openshift refer to the Openshift section below.
 
@@ -17,22 +17,22 @@ If an ingress-nginx controller is not already deployed in the cluster you'll nee
 
 Start by adding the ingress-nginx helm repository to your local helm installation:
 
-```
+```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
 In [ingress-nginx-values.yaml](ingress-nginx-values.yaml) you'll find an example values file as a starting point. Please consult your cloud providers documentation on loadbalancer implementations and necessary custom service annotations.
 
-After configuring the values file deploy the helm chart: 
+After configuring the values file deploy the helm chart:
 
-```
+```bash
 helm upgrade -i -n <namespace> <release name> ingress-nginx/ingress-nginx --version <version> -f <values file>
 ```
 
 Example:
 
-```
+```bash
 helm upgrade -i -n knime business-hub-ingress-nginx ingress-nginx/ingress-nginx --version 4.11.5 -f ingress-nginx-values.yaml
 ```
 
@@ -47,19 +47,19 @@ In [ingress.yaml](ingress.yaml) you'll find Ingress resources needed for KNIME B
 
 In each Ingress resource you will also need to replace the `<baseurl>` placeholder with the Webapp URL configured in the KOTS admin console, for example using `sed`:
 
-```
+```bash
 sed -i "s/<baseurl>/hub.example.com/g" ingress.yaml
 ```
 
 Similarly, if you are using an ingress controller other than the one recommended here then a `sed` command can be used to replace the `ingressClassName` of each `Ingress` resource.
 
-```
+```bash
 sed -i "s/<ingressclass>/business-hub/g" ingress.yaml
 ```
 
 After modifying the resources deploy them to the cluster:
 
-```
+```bash
 kubectl apply -f ingress.yaml
 ```
 

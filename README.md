@@ -14,15 +14,15 @@ Additionally, the following steps also assume that namespaces, DNS entries and r
 
 ## Namespaces
 
-KNIME Business Hub can be installed into a single namespace
+KNIME Business Hub can be installed into a single namespace.
 
 Previously the following components all deployed into separate namespaces but have been consolidated since Business Hub release 1.13.
 
-New installs will deploy all components into the same namespace `kots` is installed into. Istio will still install into it's own namespace `istio-system` so create that ahead of time if Istio was not previously during the above steps.
+New installs will deploy all components into the same namespace `kots` is installed into. Istio will still install into the `istio-system` namespace, so please create the `istio-system` namespace ahead of time if Istio was not previously installed in the steps above.
 
 The following namespaces previously needed to be initially created:
 
-* `kots` - namespace where the KOTS Admin UI is deployed to (This namespace is specified when running the KOTS install shell script to deploy KOTS as it will act as the deployment administration tool for the Business Hub release. This can alternatively be `default` or any other namespace the admin prefers to use.)
+* `kots` - namespace where the KOTS Admin UI is deployed to (This namespace is specified when running the KOTS install shell script to deploy KOTS as it will act as the deployment administration tool for the KNIME Business Hub release. This can alternatively be `default` or any other namespace the admin prefers to use.)
 * `istio-system` - the namespace where the Istio service mesh controller will run. This namespace may already exist if Istio was deployed previously during the above steps.
 * `knime` - namespace where Hub persistence layers run
 * `hub` - namespace where Hub microservices run
@@ -36,9 +36,9 @@ The KOTS admin UI can be installed by running the following from a host machine 
 curl https://kots.io/install | bash kubectl kots install knime-hub
 ```
 
-When prompted, specify the desire namespace (i.e. `knime`) where you prefer the Business Hub stack to be deployed.
+When prompted, specify the desire namespace (i.e. `knime`) where you prefer the KNIME Business Hub stack to be deployed.
 
-Once installation completes, a port-forward tunnel will be automatically opened to allow the browser to connect to the KOTS UI on https://localhost:8800
+Once installation completes, a port-forward tunnel will be automatically opened to allow the browser to connect to the KOTS UI on https://localhost:8800.
 
 When installing KOTS into an existing Kubernetes cluster, a tunnel will need to be opened anytime the KOTS UI needs to be accessed for security reasons.
 
@@ -59,11 +59,11 @@ The following will use `hub.example.com` as an example base address to highlight
 
 DNS entries will need to be created for the following endpoints:
 
-* `hub.example.com` - root URL also used for the Business Hub UI
+* `hub.example.com` - root URL also used for the KNIME Business Hub UI
 * `apps.hub.example.com` - used for exposing workflow-defined Data Apps
-* `api.hub.example.com` - exposed the Business Hub API
-* `ws.hub.example.com` - used for websocket communication between Browser/AP and Business Hub
-  * Currently used for exposing KNIME AI service available in Business Hub Standard or Enterprise `1.8.0` and higher
+* `api.hub.example.com` - exposed the KNIME Business Hub API
+* `ws.hub.example.com` - used for websocket communication between Browser/AP and KNIME Business Hub
+  * Currently used for exposing KNIME AI service available in KNIME Business Hub Standard or Enterprise `1.8.0` and higher
   * Requires the Loadbalancer in front of the Ingress controller supports Layer-4/TCP/TLS (i.e. AWS Application Load Balancer or Network Load Balancer, etc.)
 * `auth.hub.example.com` - used for exposing the embedded Keycloak user store
 * `storage.hub.example.com` - used for exposing the embedded Minio object store where workflows and data files are located
@@ -82,17 +82,16 @@ Ingress rules may need to be further updated depending on use of other tools to 
 
 See "Deploy Ingress Resources in `networking/ingress-nginx` for more information.
 
-
-## Install Business Hub
+## Install KNIME Business Hub
 
 Once the following supplemental steps above have been completed, the admin should be able to proceed with the remainder of the install as documented at docs.knime.com
 
 The high-level remaining steps include:
 
 * Logging into the KOTS Admin UI
-* Uploading the Replicated license which will fetch the latest release (`1.8.x` of Business Hub)
+* Uploading the Replicated license which will fetch the latest release (`1.8.x` of KNIME Business Hub)
 * Enter appropriate configuration parameters in the KOTS Config Dialog
-  * Specifically, note that there is an option under the Networking section to use a "provided" Ingress controller. This will block Business Hub from attempting to deploy its own ingress-nginx.
+  * Specifically, note that there is an option under the Networking section to use a "provided" Ingress controller. This will block KNIME Business Hub from attempting to deploy its own ingress-nginx.
   * Ensure the option is checked for "Enable TLS" if TLS is configured either at the Ingress-Nginx layer or somewhere else in front of the cluster.
-  * If Istio was manually installed prior to the installation, then Business Hub will need to be configured to **not** deploy Istio. This can be done by clicking the "Show Advanced Istio Configuration" option under `Networking`, the de-selecting the "Enable Istio" option in the `Networking: Istio` section that follows in the Configuration Dialog.
+  * If Istio was manually installed prior to the installation, then KNIME Business Hub will need to be configured to **not** deploy Istio. This can be done by clicking the "Show Advanced Istio Configuration" option under `Networking`, the de-selecting the "Enable Istio" option in the `Networking: Istio` section that follows in the Configuration Dialog.
 * Save the Config changes, allow the pre-flight checks to run, then click "Deploy"
