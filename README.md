@@ -1,6 +1,6 @@
 # KNIME Business Hub - Supplemental Installation Resources
 
-The following supplemental install instructions, as well as additional resources found in this repository, assume the install is performed with access to the internet on an existing Kubernetes cluster (version 1.25 to 1.28), that it has **volume provisioner** (CSI) installed, as well as an Ingress controller installed (i.e. ingress-nginx or similar).
+The following supplemental install instructions, as well as additional resources found in this repository, assume the install is performed with access to the internet on an existing Kubernetes cluster (version 1.25 to 1.31), that it has **volume provisioner** (CSI) installed, as well as an Ingress controller installed (i.e. ingress-nginx or similar).
 
 An optional prerequisite is that the Istio Service Mesh be manually installed and configured in the target cluster if cluster security configuration and permissions disallow the creation of the mesh.
 
@@ -14,13 +14,18 @@ Additionally, the following steps also assume that namespaces, DNS entries and r
 
 ## Namespaces
 
-The following namespaces need to be initially created:
+KNIME Business Hub can be installed into a single namespace
+
+Previously the following components all deployed into separate namespaces but have been consolidated since Business Hub release 1.13.
+
+New installs will deploy all components into the same namespace `kots` is installed into. Istio will still install into it's own namespace `istio-system` so create that ahead of time if Istio was not previously during the above steps.
+
+The following namespaces previously needed to be initially created:
 
 * `kots` - namespace where the KOTS Admin UI is deployed to (This namespace is specified when running the KOTS install shell script to deploy KOTS as it will act as the deployment administration tool for the Business Hub release. This can alternatively be `default` or any other namespace the admin prefers to use.)
 * `istio-system` - the namespace where the Istio service mesh controller will run. This namespace may already exist if Istio was deployed previously during the above steps.
 * `knime` - namespace where Hub persistence layers run
 * `hub` - namespace where Hub microservices run
-  * The `hub` namespace additionally needs the `istio-injection=enabled` label set for inclusion in the service mesh
 * `hub-execution` - namespace where KNIME executors will run
 
 ## Installing KOTS
@@ -31,7 +36,7 @@ The KOTS admin UI can be installed by running the following from a host machine 
 curl https://kots.io/install | bash kubectl kots install knime-hub
 ```
 
-When prompted, specify the desire namespace (i.e. `kots`, `default`, etc.) where you prefer the KOTS stack to run.
+When prompted, specify the desire namespace (i.e. `knime`) where you prefer the Business Hub stack to be deployed.
 
 Once installation completes, a port-forward tunnel will be automatically opened to allow the browser to connect to the KOTS UI on https://localhost:8800
 
@@ -39,13 +44,13 @@ When installing KOTS into an existing Kubernetes cluster, a tunnel will need to 
 
 The KOTS UI tunnel can be re-established by running:
 
-`kubectl kots admin-console -n kots`
+`kubectl kots admin-console -n knime`
 
 ( `-n` defines the namespace where KOTS is running, update accordingly)
 
 Alternatively, you can directly establish the port-forward tunnel to kots via:
 
-`kubectl -n kots port-forward service/kotsadm 8800:3000`
+`kubectl -n knime port-forward service/kotsadm 8800:3000`
 
 ## DNS Entries and TLS Certificates
 
