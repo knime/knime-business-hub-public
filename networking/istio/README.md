@@ -9,12 +9,21 @@ The commands below are a working example of installing Istio based on the provid
 Install `istioctl` cli tool:
 
 ```sh
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.20.3 TARGET_ARCH=x86_64 sh -
-cd istio-1.20.3/
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.24.2 TARGET_ARCH=x86_64 sh -
+cd istio-1.24.2/
 export PATH=$PWD/bin:$PATH
 ```
 
-Install Istio:
+In [istio-config.yaml](istio-config.yaml) you can find a minimal istio configuration that works with KNIME Business Hub. Consult the istio documentation for all possible options:
+
+- [IstioOperator resource configuration](https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/)
+- [Global mesh configuration](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/) for everything under `meshConfig`
+
+However, not all settings you can find there might work well with KNIME Business Hub, compare your changes to this file if something is not working.
+
+Before installing, check the namespace of the `auth-exchanger` extension provider under `spec.meshConfig.extensionProviders.envoyExtAuthzHttp.service`, and update it to the KNIME Business Hub namespace if you installed in a different namespace than `knime`.
+
+Then install istio:
 
 ```sh
 istioctl install -f istio-config.yaml --verify
@@ -44,11 +53,17 @@ resource may need to be converted into an Istio ProxyConfig custom resource.)
 kubectl apply -f openshift-servicemesh-config.yaml
 ```
 
+## Native Helm based installs
+
+Istio now also offers native helm charts: https://istio.io/latest/docs/setup/install/helm/. 
+
+We do not provide values files for these charts, however you can use `istioctl manifest translate` to let istio generate values files for you based on the istio-config.yaml in this repository: https://istio.io/latest/docs/reference/commands/istioctl/#istioctl-manifest-translate.
+
 ## Enable JSON Logging for Istio
 
 Istio is not configured for JSON logging by default. To enable it, the `IstioOperator` resource (`networking/istio/istio-config.yaml`) should be updated with the following:
 
-* `.spec.global.logAsJson`
+* `.spec.values.global.logAsJson`
 * `.spec.meshConfig.accessLogEncoding`
 * `.spec.meshConfig.accessLogFile`
 * `.spec.meshConfig.accessLogFormat`
@@ -63,8 +78,9 @@ kind: IstioOperator
 metadata:
   name: istio-operator
 spec:
-  global:
-    logAsJson: true
+  values:
+    global:
+      logAsJson: true
   meshConfig:
     accessLogEncoding: JSON
     accessLogFile: /dev/stdout
