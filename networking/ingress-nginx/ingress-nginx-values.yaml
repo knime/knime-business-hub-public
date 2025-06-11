@@ -2,6 +2,7 @@
 ## Find all options and full documentation here: https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
 
 controller:
+  allowSnippetAnnotations: true
   config:
     proxy-body-size: 0
     proxy-connect-timeout: 60
