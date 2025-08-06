@@ -1,0 +1,28 @@
+kind: Istio
+apiVersion: sailoperator.io/v1
+metadata:
+  name: default
+spec:
+  namespace: istio-system
+  updateStrategy:
+    inactiveRevisionDeletionGracePeriodSeconds: 30
+    type: InPlace
+  values:
+    meshConfig:
+      accessLogFile: /dev/stdout
+      defaultConfig:
+        proxyMetadata:
+          ISTIO_META_DNS_CAPTURE: "true"
+          ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+      enablePrometheusMerge: true
+      extensionProviders:
+        - name: "auth-exchanger"
+          envoyExtAuthzHttp:
+            service: "auth-exchanger.knime.svc.cluster.local"
+            port: 9090
+            includeRequestHeadersInCheck:
+              ["authorization", "user-agent", "x-forwarded-for", "cookie"]
+            headersToUpstreamOnAllow: ["authorization", "x-auth-exchanger"]
+            pathPrefix: "/check"
+            timeout: 5s
+  version: v1.24.6

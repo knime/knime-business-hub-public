@@ -1,0 +1,61 @@
+## Default values for knime-hub-istio-gateway
+
+gateway:
+  name: istio-ingressgateway
+  imagePullSecrets: []
+
+  labels:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  podAnnotations:
+    proxy.istio.io/config: '{"gatewayTopology":{ "numTrustedProxies": 1}}'
+
+  ## seems to not be needed right now, but maybe should be set to be safe?
+  ## the old charts set always set this: https://github.com/istio/istio/blob/release-1.24/manifests/charts/gateways/istio-ingress/templates/deployment.yaml#L190-L193
+  env:
+    ISTIO_META_UNPRIVILEGED_POD: "true"
+
+  service:
+    type: ClusterIP
+    ## overwrite ports to get istio-ingressgateway to listen on 8080, 8443 instead of 80, 443 (the latter would require more privileges)
+    ports:
+    - name: status-port
+      port: 15021
+      protocol: TCP
+      targetPort: 15021
+    - name: http2
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8443
+
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1024Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 3
+
+  nodeSelector: {}
+  affinity: 
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: hub.knime.com/role
+                operator: In
+                values:
+                  - core
+  tolerations:
+    - key: "hub.knime.com/role"
+      value: "core"
