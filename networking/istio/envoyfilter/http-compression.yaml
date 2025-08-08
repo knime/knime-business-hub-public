@@ -12,7 +12,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: http-compression
-  namespace: istio-system
+  namespace: knime
 spec:
   ## Apply this filter only on the istio-ingressgateway. Internal mesh communication is not compressed.
   workloadSelector:

@@ -11,7 +11,7 @@ kind: EnvoyFilter
 metadata:
   name: 503-local-reply-overwrite-gateway
   ## The namespace where the istio-ingressgateway is deployed to.
-  namespace: istio-system
+  namespace: knime
 spec:
   configPatches:
   - applyTo: NETWORK_FILTER
