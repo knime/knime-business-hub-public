@@ -14,6 +14,15 @@ rules:
   - get
   - list
   - watch
+# to read existing PVs. Creation should be done via dynamic provisioning.
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - update # only for resizing AWS volumes
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
