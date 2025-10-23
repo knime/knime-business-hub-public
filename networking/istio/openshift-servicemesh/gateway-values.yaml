@@ -10,8 +10,6 @@ gateway:
   podAnnotations:
     proxy.istio.io/config: '{"gatewayTopology":{ "numTrustedProxies": 1}}'
 
-  ## seems to not be needed right now, but maybe should be set to be safe?
-  ## the old charts set always set this: https://github.com/istio/istio/blob/release-1.24/manifests/charts/gateways/istio-ingress/templates/deployment.yaml#L190-L193
   env:
     ISTIO_META_UNPRIVILEGED_POD: "true"
 

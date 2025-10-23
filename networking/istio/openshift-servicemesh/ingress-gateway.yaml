@@ -37,6 +37,19 @@ spec:
       containers:
       - name: istio-proxy
         image: istio/proxyv2:1.24.2
+      affinity: 
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: hub.knime.com/role
+                    operator: In
+                    values:
+                      - core
+      tolerations:
+        - key: "hub.knime.com/role"
+          value: "core"
 
 ---
 # Set up roles to allow reading credentials for TLS
