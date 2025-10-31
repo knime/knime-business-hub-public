@@ -67,22 +67,6 @@ spec:
         type: ClusterIP
     openshiftRoute:
       enabled: false
-  meshConfig:
-    extensionProviders:
-      - envoyExtAuthzHttp:
-          headersToUpstreamOnAllow:
-            - authorization
-            - x-auth-exchanger
-          includeRequestHeadersInCheck:
-            - authorization
-            - user-agent
-            - x-forwarded-for
-            - cookie
-          pathPrefix: /check
-          port: 9090
-          service: auth-exchanger.hub.svc.cluster.local
-          timeout: 5s
-        name: auth-exchanger
   policy:
     type: Istiod
   addons:

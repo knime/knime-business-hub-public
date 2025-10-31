@@ -21,8 +21,6 @@ In [istio-config.yaml](istio-config.yaml) you can find a minimal istio configura
 
 However, not all settings you can find there might work well with KNIME Business Hub, compare your changes to this file if something is not working.
 
-Before installing, check the namespace of the `istio-ingressgateway` and the `auth-exchanger` extension provider under `spec.meshConfig.extensionProviders.envoyExtAuthzHttp.service`, and update it to the KNIME Business Hub namespace if you installed in a different namespace than `knime`.
-
 Then install istio:
 
 ```sh

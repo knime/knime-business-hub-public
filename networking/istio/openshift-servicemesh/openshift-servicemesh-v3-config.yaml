@@ -15,14 +15,4 @@ spec:
           ISTIO_META_DNS_CAPTURE: "true"
           ISTIO_META_DNS_AUTO_ALLOCATE: "true"
       enablePrometheusMerge: true
-      extensionProviders:
-        - name: "auth-exchanger"
-          envoyExtAuthzHttp:
-            service: "auth-exchanger.knime.svc.cluster.local"
-            port: 9090
-            includeRequestHeadersInCheck:
-              ["authorization", "user-agent", "x-forwarded-for", "cookie"]
-            headersToUpstreamOnAllow: ["authorization", "x-auth-exchanger"]
-            pathPrefix: "/check"
-            timeout: 5s
   version: v1.24.6
