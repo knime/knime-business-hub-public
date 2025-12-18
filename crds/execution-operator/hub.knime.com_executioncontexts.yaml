@@ -634,6 +634,11 @@ spec:
                         minimum: 1
                         type: integer
                     type: object
+                  serviceAccountName:
+                    default: default
+                    description: Service account name for the executor pod(s).
+                    maxLength: 253
+                    type: string
                   startupTimeoutSeconds:
                     default: 300
                     description: |-
