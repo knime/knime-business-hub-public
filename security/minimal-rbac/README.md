@@ -26,10 +26,9 @@ The majority of ClusterRoles and ClusterRoleBindigs have already been eliminated
 
 Due to these dependencies, installation with minimal RBAC mode enabled can only succeed if the following prerequisites are <u>fulfilled</u>:
 
-1.  [Customer installs CustomResoureDefinitions.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/crds/)
-2.  [Customer installs ingress-nginx and creates necessary IngressRules.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/ingress-nginx/)
-3.  [Customer installs istio.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/istio/)
-4.  [Customer applies necessary ClusterRoles and ClusterRoleBindings.](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/security/clusterroles/)
+1.  [Customer installs CustomResoureDefinitions.](https://github.com/knime/knime-business-hub-public/tree/main/crds)
+2.  [Customer installs istio.](https://github.com/knime/knime-business-hub-public/tree/main/networking/istio)
+3.  [Customer applies necessary ClusterRoles and ClusterRoleBindings.](https://github.com/knime/knime-business-hub-public/tree/main/security/clusterroles)
 
 ## 3. Installing knime-hub
 
@@ -37,10 +36,7 @@ When installing knime-hub into and enviroment that is running in namespace-scope
 
 1. **Enable** the `View Advanced Settings` option in the Global section to display advanced configuration options.
     ![global-advanced-option](images/1_Global_Advanced_Options.png)
-2.  Set the Ingress Controller Configuration to the `Provided by the cluster` option. **Enable** the `Show Advanced Istio Configuration` and **disable** the `Enable Istio` option in the Networking: Istio section.
+2. **Enable** the `Show Advanced Istio Configuration` and **disable** the `Enable Istio` option in the Networking: Istio section.
     ![networking](images/2_Networking.png)
-3.  In the Advanced: Kubernetes Cluster Management section **disable** `Enable Automatic Deployment and Updates for Custom Resource Definitions (CRDs)` and `Enable Cluster Role Provisioning` options.
-
-    > Leave the `Add istio injection label to hub namespace` enabled or disable it if the condition applies.
-
+3.  In the Advanced: Kubernetes Cluster Management section **disable** both `Enable Automatic Deployment and Updates for Custom Resource Definitions (CRDs)` and `Enable Cluster Role Provisioning` options.
     ![advanced-kubernetes-cluster-management](images/3_Advanced_Kubernetes_Cluster_Management.png)

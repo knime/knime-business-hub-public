@@ -1,0 +1,46 @@
+# Example Istio Gateway for KNIME Business Hub.
+#
+# Customize before applying:
+# - metadata.namespace: use the namespace where KNIME Business Hub is installed (e.g. knime-hub)
+# - spec.servers[].hosts: replace with your actual hostnames for Hub, apps, api, auth, ws, and storage
+#
+# TLS is typically terminated at the load balancer; the LB forwards plain HTTP to this gateway on port 80.
+# If you terminate TLS at the gateway instead, uncomment and configure the tls section for port 443.
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: hub-api-gateway
+  namespace: knime-hub  # Change to your KNIME Business Hub namespace
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - hub.example.com
+        - apps.hub.example.com
+        - api.hub.example.com
+        - auth.hub.example.com
+        - ws.hub.example.com
+        - storage.hub.example.com
+      tls:
+        httpsRedirect: false
+    - port:
+        number: 443
+        name: https
+        protocol: HTTP  # Use HTTPS when TLS is terminated at the gateway
+      hosts:
+        - hub.example.com
+        - apps.hub.example.com
+        - api.hub.example.com
+        - auth.hub.example.com
+        - ws.hub.example.com
+        - storage.hub.example.com
+      # Required when TLS is terminated at the gateway; uncomment and set credentialName:
+      # tls:
+      #   mode: SIMPLE
+      #   credentialName: business-hub-certificate

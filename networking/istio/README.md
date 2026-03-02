@@ -9,8 +9,8 @@ The commands below are a working example of installing Istio based on the provid
 Install `istioctl` cli tool:
 
 ```sh
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.24.2 TARGET_ARCH=x86_64 sh -
-cd istio-1.24.2/
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.28.3 TARGET_ARCH=x86_64 sh -
+cd istio-1.28.3/
 export PATH=$PWD/bin:$PATH
 ```
 
@@ -32,6 +32,12 @@ istioctl install -f istio-config.yaml --verify
 This will install and verify the Istio service mesh install into the `istio-system` namespace.
 
 Additionally, some EnvoyFilters can be found in `networking/istio/envoyfilter/` which are recommended to be deployed after installing istio, to enable http compression in istio or more user friendly error messages. You may need to update the namespace for each EnvoyFilter before deploying.
+
+## Gateway example
+
+By default the deployment includes an Istio Gateway that uses the correct DNS names and basic TLS configuration. If you need a custom Gateway instead, disable the default one either via Replicated config or with ArgoCD values overrides.
+
+[example-gateway.yaml](example-gateway.yaml) is an example Istio Gateway for KNIME Business Hub. Before applying it, set the gateway metadata namespace to your Hub namespace and replace the example hosts (`hub.example.com`, `apps.example.com`, etc.) with your actual hostnames. If TLS is terminated at the gateway instead of the load balancer, uncomment and configure the TLS section for port 443.
 
 ## Openshift
 
