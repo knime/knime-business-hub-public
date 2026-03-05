@@ -43,7 +43,7 @@ By default the deployment includes an Istio Gateway that uses the correct DNS na
 
 Istio can be installed manually into an Openshift cluster or setup using the Openshift Service Mesh Operator. 
 
-> See [Openshift Docs: Service Mesh](https://docs.openshift.com/container-platform/latest/service_mesh/v2x/ossm-about.html) for information on setting up the Service Mesh and [/networking/istio/openshift-servicemesh](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/istio/openshift-servicemesh) for recommended configuration options.
+> See [Openshift Docs: Service Mesh](https://docs.openshift.com/container-platform/latest/service_mesh/v2x/ossm-about.html) for information on setting up the Service Mesh and [/networking/openshift](https://github.com/knime/knime-business-hub-public/tree/main/networking/istio/openshift-servicemesh) for recommended configuration options.
 
 When installing on Openshift manually use the following command.
 

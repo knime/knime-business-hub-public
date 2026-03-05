@@ -1,0 +1,82 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: business-hub-hub
+  namespace: knime
+  annotations:
+    haproxy.router.openshift.io/timeout: "1800"
+spec:
+  ingressClassName: <ingressclass>
+  ## The tls block needs additional configuration if cert-manager or similar
+  ## is used to create and bind certificates in the cluster to specific ingress rules.
+  #tls:
+  #- hosts:
+  #    - <baseurl>
+  #  secretName: <cert-secret-name>
+  #- hosts:
+  #    - api.<baseurl>
+  #  secretName: <cert-secret-name>
+  #- hosts:
+  #    - ws.<baseurl>
+  #  secretName: <cert-secret-name>
+  rules:
+    - host: <baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443
+    - host: api.<baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443
+    - host: apps.<baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443
+    - host: ws.<baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443
+    - host: auth.<baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443
+    - host: storage.<baseurl>
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 443                                    

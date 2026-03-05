@@ -25,4 +25,4 @@ spec:
             headersToUpstreamOnAllow: ["authorization", "x-auth-exchanger"]
             pathPrefix: "/check"
             timeout: 5s
-  version: v1.24.6
+  version: v1.28.3
