@@ -37,7 +37,11 @@ Additionally, some EnvoyFilters can be found in `networking/istio/envoyfilter/` 
 
 By default the deployment includes an Istio Gateway that uses the correct DNS names and basic TLS configuration. If you need a custom Gateway instead, disable the default one either via Replicated config or with ArgoCD values overrides.
 
-[example-gateway.yaml](example-gateway.yaml) is an example Istio Gateway for KNIME Business Hub. Before applying it, set the gateway metadata namespace to your Hub namespace and replace the example hosts (`hub.example.com`, `apps.example.com`, etc.) with your actual hostnames. If TLS is terminated at the gateway instead of the load balancer, uncomment and configure the TLS section for port 443.
+[ingress-gateway.yaml](ingress-gateway.yaml) is an example Istio Gateway for KNIME Business Hub. Before applying it, set the gateway metadata namespace to your Hub namespace and replace the example hosts (`hub.example.com`, `apps.example.com`, etc.) with your actual hostnames. If TLS is terminated at the gateway instead of the load balancer, uncomment and configure the TLS section for port 443.
+
+## Ingress example
+
+[ingress.yaml](./ingress.yaml) is an example Ingress resource for routing traffic to the Istio Ingress Gateway service. In a KNIME Business Hub installation, all relevant traffic must reach the Istio Ingress Gateway and will be routed properly from that point onward. The example can be further configured to fit your desired ingress strategy.
 
 ## Openshift
 
