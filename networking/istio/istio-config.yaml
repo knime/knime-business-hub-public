@@ -31,7 +31,7 @@ spec:
       enabled: true
   ## Root for docker image paths e.g. "gcr.io/istio-release". Using gcr.io since dockerhub introduced stricter rate limits.
   hub: "gcr.io/istio-release"
-  ## Version tag for docker images e.g. "1.24.2".
+  ## Version tag for docker images e.g. "1.28.3".
   tag: "1.28.3"
   meshConfig:
     accessLogFile: /dev/stdout

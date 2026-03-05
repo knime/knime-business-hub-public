@@ -74,13 +74,11 @@ Additionally, a TLS cert will need to be provisioned either directly or via addi
 
 If creating the cert explicitly, it's typically recommended to create a cert with the common name hub.example.com, and listing all domains above as subject alternative names, or using a wildcard for the subject alternative name (i.e. *.hub.example.com)
 
-## Ingress Rules
+## Openshift Ingress Rules
 
-`Ingress` rules will need to be manually created prior to install. A working template of the required `Ingresses` can be found under [/networking/ingress-nginx/ingress.yaml](https://bitbucket.org/KNIME/knime-business-hub-public/src/main/networking/ingress-nginx/ingress.yaml).
+`Ingress` rules will need to be manually created prior to install for Openshift clusters. A working template of the required `Ingress` can be found under [/networking/openshift/ingress.yaml](https://github.com/knime/knime-business-hub-public/tree/main/networking/ingress-nginx/ingress.yaml).
 
 Ingress rules may need to be further updated depending on use of other tools to correctly set DNS, TLS, etc.
-
-See "Deploy Ingress Resources in `networking/ingress-nginx` for more information.
 
 ## Install KNIME Business Hub
 
