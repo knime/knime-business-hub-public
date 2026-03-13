@@ -1,0 +1,88 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-v2-migration
+  namespace: knime
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: mc
+          image: registry.hubdev.knime.com/sandbox-public/mc:RELEASE.2025-08-13T08-35-41Z
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              set -eu
+
+              SRC_ENDPOINT="http://minio.${NAMESPACE}.svc.cluster.local:9000"
+              DST_ENDPOINT="http://minio-v2.${NAMESPACE}.svc.cluster.local:9000"
+
+              BUCKETS="
+              knime-accounts-service-avatars
+              knime-catalog-service
+              knime-customization-profiles
+              knime-execution-jobs
+              knime-postgres-backup
+              "
+
+              echo "Configuring MinIO aliases..."
+              mc alias set src "${SRC_ENDPOINT}" "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}"
+              mc alias set dst "${DST_ENDPOINT}" "${MINIO_V2_ROOT_USER}" "${MINIO_V2_ROOT_PASSWORD}"
+
+              echo "Checking connectivity..."
+
+              if ! mc ls src >/dev/null 2>&1; then
+                echo "ERROR: Cannot access source MinIO"
+                exit 1
+              fi
+
+              if ! mc ls dst >/dev/null 2>&1; then
+                echo "ERROR: Cannot access destination MinIO"
+                exit 1
+              fi
+
+              echo "Checking destination buckets exist..."
+              for bucket in ${BUCKETS}; do
+                [ -z "${bucket}" ] && continue
+                if mc stat "dst/${bucket}" >/dev/null 2>&1; then
+                  echo "Bucket ${bucket} exists, OK"
+                else
+                  echo "ERROR: Destination bucket ${bucket} does not exist; create it first or migration will not run"
+                  exit 1
+                fi
+              done
+
+              echo "Starting bucket migration..."
+              for bucket in ${BUCKETS}; do
+                [ -z "${bucket}" ] && continue
+                echo "Mirroring ${bucket}"
+                mc mirror --overwrite "src/${bucket}" "dst/${bucket}"
+              done
+
+              echo "MinIO migration completed successfully."
+          env:
+            - name: NAMESPACE
+              value: knime
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: minio
+                  key: rootUser
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minio
+                  key: rootPassword
+            - name: MINIO_V2_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: minio-v2
+                  key: rootUser
+            - name: MINIO_V2_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minio-v2
+                  key: rootPassword
