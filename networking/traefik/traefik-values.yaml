@@ -1,0 +1,48 @@
+deployment:
+  replicas: 2
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: hub.knime.com/role
+              operator: In
+              values:
+                - core
+
+tolerations:
+  - key: hub.knime.com/role
+    operator: Equal
+    value: core
+    effect: NoSchedule
+
+ports:
+  ## Expose service port 443, but send it to Traefik web/8000 as TLS is handled by the load balancer
+  websecure:
+    port: 443
+    targetPort: 8000
+    expose:
+      default: true
+
+## Looks like needed to explicitly set the entrypoint address to 8000 when using websecure as the entrypoint but TLS is terminated by the load balancer
+additionalArguments:
+  - "--entrypoints.web.address=:8000"
+    
+providers:
+  kubernetesCRD:
+    ## Allows IngressRoute to reference resources in namespace other than theirs
+    allowCrossNamespace: true
+
+service:
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:<region>:<account>:certificate/<certificate-id>
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    
+logs:
+  access:
+    enabled: true
