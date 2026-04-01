@@ -51,6 +51,9 @@ spec:
           pathPrefix: "/check"
           timeout: 5s
   values:
+    pilot:
+      env:
+        ENABLE_NATIVE_SIDECARS: "false"
     gateways:
       istio-egressgateway:
         autoscaleEnabled: true
