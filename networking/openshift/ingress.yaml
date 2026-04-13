@@ -4,7 +4,7 @@ metadata:
   name: knime-business-hub-ingress
   namespace: knime
   annotations:
-    haproxy.router.openshift.io/timeout: "1800"
+    haproxy.router.openshift.io/timeout: 1800s
 spec:
   ingressClassName: <ingressclass>
   rules:
