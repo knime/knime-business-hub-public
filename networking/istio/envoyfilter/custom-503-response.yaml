@@ -71,4 +71,3 @@ spec:
               status_code: 503
               body:
                 inline_string: "Service not available. Please try again later."
-{{- end }}
