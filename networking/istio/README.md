@@ -9,8 +9,8 @@ The commands below are a working example of installing Istio based on the provid
 Install `istioctl` cli tool:
 
 ```sh
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.28.3 TARGET_ARCH=x86_64 sh -
-cd istio-1.28.3/
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.31.3 TARGET_ARCH=x86_64 sh -
+cd istio-1.31.3/
 export PATH=$PWD/bin:$PATH
 ```
 
