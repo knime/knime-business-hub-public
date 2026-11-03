@@ -65,5 +65,5 @@ kubectl apply -n <hub-namespace> -f ingress-gateway.yaml
 The istio ingress gateway can also be installed via helm with the following command. Issues may be seen on clusters using the restricted-v2 Security Context Constraint and the above method is currently preferred.
 
 ```sh
-helm install -n <hub-namespace> istio-ingressgateway istio/gateway --set global.platform=openshift --version=1.28.3 -f gateway-values.yaml
+helm install -n <hub-namespace> istio-ingressgateway istio/gateway --set global.platform=openshift --version=1.31.3 -f gateway-values.yaml
 ```
